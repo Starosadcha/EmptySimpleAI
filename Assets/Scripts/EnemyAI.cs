@@ -7,7 +7,7 @@ public class EnemyAI : MonoBehaviour
 {
     [Header("Movement")]
     public float speed = 2f;
-    public float chaseDistance = 5f;
+    public float chaseDistance = 3f;
     public float attackDistance = 1f;
 
     [Header("Patrol")]
@@ -22,7 +22,8 @@ public class EnemyAI : MonoBehaviour
     [Header("References")]
     public Transform player;
     public Animator anim;
-
+    public ParticleSystem hitVFX;
+    public Transform attackPoint;
     private void Update()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
@@ -35,7 +36,7 @@ public class EnemyAI : MonoBehaviour
         {
             Chase();
         }
-        else
+        else if (distanceToPlayer > chaseDistance * 1.5f)
         {
             Patrol();
         }
@@ -65,6 +66,11 @@ public class EnemyAI : MonoBehaviour
         {
             return;
         }
+        if (hitVFX != null && attackPoint != null)
+        {
+            Instantiate(hitVFX, attackPoint.position, Quaternion.identity);
+        }
+
         PlayerStats playerStats = player.GetComponent<PlayerStats>();
         if (playerStats != null)
         {
@@ -73,10 +79,10 @@ public class EnemyAI : MonoBehaviour
         }
         lastAttackTime = Time.time;
     }
+    void Flip(float direction)
+    {
+        if (Mathf.Abs(direction) < 0.01f) return;
+        transform.localScale = new Vector3(1, 1, 1);
+    }
 
-}
-void Flip(float direction)
-{
-    if (Mathf.Abs(direction) < 0.01f) return;
-     transsform.localScale = new Vector3(1, 1, 1);
 }
