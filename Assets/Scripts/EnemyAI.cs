@@ -24,6 +24,10 @@ public class EnemyAI : MonoBehaviour
     public Animator anim;
     public ParticleSystem hitVFX;
     public Transform attackPoint;
+
+    [Header("Audio")]
+    public AudioSource audioSource;  
+    public AudioClip attackClip;
     private void Update()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
@@ -65,6 +69,10 @@ public class EnemyAI : MonoBehaviour
         if (Time.time < lastAttackTime + attackCooldown)
         {
             return;
+        }
+        if (audioSource != null && attackClip != null)
+        {
+            audioSource.PlayOneShot(attackClip);
         }
         if (hitVFX != null && attackPoint != null)
         {
